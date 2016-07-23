@@ -3,38 +3,64 @@ package com.kcomp;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDAOImpDB implements UserDAO{
-
-	@PersistenceContext
-	private EntityManager entityManager;
-	private JdbcTemplate jdbcTemplate;
+	
+	private EntityManagerFactory entityManagerFactory = 
+            Persistence.createEntityManagerFactory("test-jpa");
+	
+  
 	
 	@Override
 	public boolean save(User user) {
-		entityManager.persist(user);
+		EntityManager em = entityManagerFactory.createEntityManager();
+	    EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.persist(user);
+		transaction.commit();
+		em.close();
 		return true;
 	}
 
 	@Override
 	public User getUser(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManager em = entityManagerFactory.createEntityManager();
+	    EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		User u = em.find(User.class, id);
+		transaction.commit();
+		em.close();
+		return u;
 	}
 
 	@Override
 	public List<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManager em = entityManagerFactory.createEntityManager();	    
+		Query q = em.createQuery("SELECT u FROM User u");
+		return q.getResultList();
 	}
 
 	@Override
 	public boolean update(int id, User user) {
-		// TODO Auto-generated method stub
-		return false;
+		 
+		EntityManager em = entityManagerFactory.createEntityManager();
+	    EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.persist(user);
+		transaction.commit();
+		em.close();
+		return true;
 	}
 
 	@Override
@@ -44,8 +70,11 @@ public class UserDAOImpDB implements UserDAO{
 	}
 
 	@Override
-	public void setJdbcTemplate(JdbcTemplate j) {
-		this.jdbcTemplate = j;
+	public void finish() {
+		//em.close();
+		
 	}
+
+
 
 }

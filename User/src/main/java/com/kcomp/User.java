@@ -1,8 +1,13 @@
 package com.kcomp;
 
+import java.util.*;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -13,6 +18,10 @@ public class User {
 	
 	private String name;
 	private int age;
+	
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	List<Book> books = new ArrayList<>();
 	
 	public User(){}
 	
@@ -27,6 +36,11 @@ public class User {
 		this.age = age;
 	}
 	
+	@Override
+	public String toString() {
+		return "User [idUser=" + idUser + ", name=" + name + ", age=" + age + ", books=" + books + "]";
+	}
+
 	public int getIdUser() {
 		return idUser;
 	}
@@ -45,4 +59,8 @@ public class User {
 	public void setAge(int age) {
 		this.age = age;
 	}
+	public void addBook(Book b){
+		books.add(new Book(b));
+	}
+	
 }

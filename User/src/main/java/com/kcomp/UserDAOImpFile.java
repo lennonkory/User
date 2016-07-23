@@ -111,7 +111,7 @@ public class UserDAOImpFile implements UserDAO{
 	}
 
 	@Override
-	public void setJdbcTemplate(JdbcTemplate j) {
+	public void finish() {
 		// TODO Auto-generated method stub
 		
 	}
